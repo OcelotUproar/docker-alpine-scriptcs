@@ -1,4 +1,4 @@
-NAME=ocelotuproar/docker-alpine-fsharp
+NAME=ocelotuproar/docker-alpine-scriptcs
 
 default: build
 

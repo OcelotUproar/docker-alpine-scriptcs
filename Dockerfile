@@ -1,17 +1,15 @@
 FROM ocelotuproar/docker-alpine-mono:4.4
 
-ENV FSHARP_VERSION 4.0.1.1
+ENV SCRIPTCS_VERSION 0.16.1
 
-RUN apk --no-cache add --virtual build-dependencies wget ca-certificates autoconf libtool pkgconf make automake && \
-      mkdir -p /tmp/src && \
+RUN mkdir -p /tmp/src && \
       cd /tmp/src && \
-      wget --progress=dot:mega https://github.com/fsharp/fsharp/archive/$FSHARP_VERSION.tar.gz && \
-      tar xzf $FSHARP_VERSION.tar.gz && \
-      cd /tmp/src/fsharp-$FSHARP_VERSION && \
-      ./autogen.sh --prefix=/usr --with-gacdir=/usr/lib/mono/gac && \
-      make && \
-      make install && \
-      cd ~ && \
-      rm -rf /tmp/src
+      wget --progress=dot:mega https://github.com/scriptcs/scriptcs/archive/v$SCRIPTCS_VERSION.tar.gz && \
+      tar xzf v$SCRIPTCS_VERSION.tar.gz && \
+      cd /tmp/src/scriptcs-$SCRIPTCS_VERSION && \
+      mono .nuget/NuGet.exe restore ./ScriptCs.sln && xbuild ./ScriptCs.sln /property:Configuration=Release /nologo /verbosity:normal && \
+      cp -r /tmp/src/scriptcs-0.16.1/src/ScriptCs/bin/Release /usr/bin/scriptcs
 
-CMD ["fsharpi"]
+ENV PATH $PATH:/usr/bin/scriptcs/
+RUN echo 'mono "/usr/bin/scriptcs/scriptcs.exe"' > /usr/bin/scriptcs/scriptcs && chmod +x /usr/bin/scriptcs/scriptcs
+CMD "scriptcs"
