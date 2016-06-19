@@ -11,5 +11,5 @@ RUN mkdir -p /tmp/src && \
       cp -r /tmp/src/scriptcs-0.16.1/src/ScriptCs/bin/Release /usr/bin/scriptcs
 
 ENV PATH $PATH:/usr/bin/scriptcs/
-RUN echo 'mono "/usr/bin/scriptcs/scriptcs.exe"' > /usr/bin/scriptcs/scriptcs && chmod +x /usr/bin/scriptcs/scriptcs
+RUN echo '#!/usr/bin/env ash' > /usr/bin/scriptcs/scriptcs && echo 'mono "/usr/bin/scriptcs/scriptcs.exe"' >> /usr/bin/scriptcs/scriptcs && chmod +x /usr/bin/scriptcs/scriptcs
 CMD "scriptcs"
